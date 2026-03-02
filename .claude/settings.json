@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Read(//c/Users/train/Source/Repos/Architect AI/**)",
+      "Bash(python3:*)",
+      "Read(//usr/**)",
+      "Bash(gh auth status)",
+      "Bash(git --version)",
+      "Bash(git config --global user.name)",
+      "Bash(git config --global user.email)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\train\\Source\\Repos\\Architect AI\\.claude\\skills\\architecture-impact-skill",
+      "c:\\Users\\train\\Source\\Repos\\Architect AI\\.claude\\skills\\architect-skill\\agents"
+    ]
+  }
+}
