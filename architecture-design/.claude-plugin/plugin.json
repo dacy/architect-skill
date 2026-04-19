@@ -1,0 +1,8 @@
+{
+  "name": "architect-ai",
+  "description": "Enterprise architecture design assistant with guided 10-phase workflow producing a Solution Intent document",
+  "author": {
+    "name": "chun",
+    "email": "chun.du@dfwit.org"
+  }
+}
