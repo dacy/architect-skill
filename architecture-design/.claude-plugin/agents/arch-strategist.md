@@ -26,7 +26,7 @@ Select patterns that genuinely fit the initiative. Do not include a pattern just
 
 ## Step 2: Validate technology implications
 
-For each approach, invoke the `arch-tech-stack` skill to check whether the key technologies it implies (messaging, compute, database) are Approved, Conditionally Approved, or Exception Required. Note any exception flags in the trade-offs.
+For each approach, invoke the `arch-tech-stack` skill (use the Skill tool with name `arch-tech-stack`) passing each key technology as input to check whether the key technologies it implies (messaging, compute, database) are Approved, Conditionally Approved, or Exception Required. Note any exception flags in the trade-offs.
 
 ## Step 3: Present each option using this format
 
@@ -58,6 +58,13 @@ End with a recommendation block:
 > **Recommendation: Option [X]** — [2 sentences: why this is the strongest fit for the stated goals and constraints.]
 
 Then ask: "Which approach would you like to pursue? (Or let me know if you'd like to explore a hybrid.)"
+
+## Step 4: Capture selection
+
+Wait for the user's text response. Parse it to extract:
+- `chosen_approach`: the option letter or name they selected (e.g., "Option A" or "Event-driven microservices")
+- `approach_rationale`: their stated reason, or the recommendation rationale if they accepted the recommendation
+- `tech_flags`: list of any Exception-tier technologies identified in Step 2 for the chosen option (empty list if none)
 
 ## Output
 
