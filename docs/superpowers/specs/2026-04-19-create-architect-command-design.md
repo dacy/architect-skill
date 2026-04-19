@@ -42,14 +42,14 @@ The orchestrator parses and classifies the input. Extracts:
 - Any referenced systems or external URLs
 
 ### Phase 2 — Context Exploration *(parallel)*
-One `arch-explorer` agent is spawned per referenced system or URL. Agents run concurrently. Each explores its target and returns a structured context block:
+One `arch-explorer` agent is spawned per referenced system or URL. Agents run concurrently. Each explores its target using the **Atlassian MCP** (Confluence pages, Jira epics) and **GitHub MCP** (READMEs, code, ADRs) as appropriate. Returns a structured context block:
 - System name and tech stack
 - Key APIs and interfaces exposed
 - Data owned
 - Upstream/downstream dependencies
 
 ### Phase 3 — Clarifying Questions
-The orchestrator asks targeted questions one at a time (max ~5) until scope is unambiguous. Stops when it has enough context to proceed to design.
+The orchestrator asks targeted questions one at a time. The number of questions is adaptive — more questions for complex or ambiguous initiatives, fewer for well-defined ones. Stops when it has enough context to proceed to design without significant assumptions.
 
 ### Phase 4 — High-Level Approaches *(user approval gate)*
 `arch-strategist` presents 2–3 high-level architectural directions, each with:
@@ -92,7 +92,7 @@ The orchestrator determines which specialist agents to run based on confirmed sc
 
 | Agent | Skill | Key Outputs |
 |-------|-------|-------------|
-| `arch-agent-api` | `arch-api-event` | API styles, endpoint contracts, event schemas, versioning strategy |
+| `arch-agent-api-event` | `arch-api-event` | API styles, endpoint contracts, event schemas, versioning strategy |
 | `arch-agent-data` | `arch-data` | Data ownership per service, storage choices, caching strategy, migration approach |
 | `arch-agent-deployment` | `arch-deployment` | Compute pattern, IaC, CI/CD pipeline, environment strategy, network design |
 | `arch-agent-security` | `arch-security` | AuthN/AuthZ model, secrets management, network controls, threat surface |
@@ -196,7 +196,7 @@ architecture-design/.claude-plugin/
 │   ├── arch-explorer.md
 │   ├── arch-strategist.md
 │   ├── arch-agent-ddd.md
-│   ├── arch-agent-api.md
+│   ├── arch-agent-api-event.md
 │   ├── arch-agent-data.md
 │   ├── arch-agent-deployment.md
 │   ├── arch-agent-security.md
@@ -223,8 +223,10 @@ architecture-design/.claude-plugin/
 
 ---
 
-## Open Questions
+## Decisions Log
 
-- Should `arch-explorer` support authenticated Confluence/Jira access, or read-only public URLs only?
-- Should the number of clarifying questions (currently capped at ~5) be configurable?
-- Should 🟡 Important review findings trigger a second approval gate, or just be appended and left to the user?
+| Question | Decision |
+|----------|----------|
+| `arch-explorer` data access | Uses Atlassian MCP (Confluence, Jira) and GitHub MCP for authenticated reads |
+| Clarifying question count | Adaptive — scales with initiative complexity and ambiguity, no fixed cap |
+| 🟡 Important review findings | Appended to Section 12 and left to the user; no second approval gate |
