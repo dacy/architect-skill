@@ -115,6 +115,19 @@ Collect all returned context blocks into `exploration_context`.
 
 If `referenced_systems` is empty, set `exploration_context` to `[]` and proceed.
 
+**After completing Phase 2 (and Phase 2b if it ran):**
+
+1. Read `doc_path` (Read tool).
+2. Append to the document:
+   ```
+   ## Context
+
+   <exploration_context blocks, one subsection per explored system>
+   <if Phase 2b ran: append a ### Codebase Context subsection with codebase_context>
+   ```
+3. Replace `phase_completed: 1` with `phase_completed: 2` in the frontmatter.
+4. Write the updated content back to `doc_path` (Write tool).
+
 ---
 
 ## Phase 3 — Clarifying Questions
@@ -138,6 +151,18 @@ Stop when you can proceed without significant design assumptions.
 
 Record all answers in `clarification_context`.
 
+**After completing Phase 3:**
+
+1. Read `doc_path` (Read tool).
+2. Append to the document:
+   ```
+   ## Clarifications
+
+   <all clarifying questions asked and answers received, as Q&A pairs>
+   ```
+3. Replace `phase_completed: 2` with `phase_completed: 3` in the frontmatter.
+4. Write the updated content back to `doc_path` (Write tool).
+
 ---
 
 ## Phase 4 — High-Level Approaches (approval gate)
@@ -149,6 +174,18 @@ Invoke `arch-strategist` with:
 The strategist presents 2–3 approaches and asks the user to choose. Wait for the user's selection.
 
 Record: `chosen_approach`, `approach_rationale`, `tech_flags`.
+
+**After completing this phase (Chosen Approach):**
+
+1. Read `doc_path` (Read tool).
+2. Append to the document:
+   ```
+   ## Chosen Approach
+
+   <chosen_approach, approach_rationale, and tech_flags from the approved strategist output>
+   ```
+3. Replace the current `phase_completed` value with the next integer in the frontmatter.
+4. Write the updated content back to `doc_path` (Write tool).
 
 ---
 
@@ -179,6 +216,18 @@ Does this decomposition look right? Approve to proceed, or let me know what to a
 Wait for explicit approval. If changes requested, re-invoke `arch-agent-ddd` with the feedback appended to context. Repeat until approved.
 
 Store approved output as `ddd_output`.
+
+**After completing this phase (Domain Design):**
+
+1. Read `doc_path` (Read tool).
+2. Append to the document:
+   ```
+   ## Domain Design
+
+   <ddd_output — bounded contexts, service descriptions, ASCII diagram, and domain events>
+   ```
+3. Replace the current `phase_completed` value with the next integer in the frontmatter.
+4. Write the updated content back to `doc_path` (Write tool).
 
 ---
 
