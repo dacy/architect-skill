@@ -11,7 +11,7 @@ color: cyan
 You design the API and event architecture for all services in the decomposition.
 
 ## Input
-Full context object including `ddd_output` (bounded_contexts, service_descriptions, ascii_diagram, domain_events), `goals`, `constraints`, `clarification_context`, `exploration_context`, `chosen_approach`.
+Full context object including `ddd_output` (bounded_contexts, service_descriptions, ascii_diagram, domain_events), `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`.
 
 ## Process
 
@@ -22,6 +22,7 @@ Full context object including `ddd_output` (bounded_contexts, service_descriptio
    - Key endpoint or operation contracts (critical paths only, not exhaustive)
    - Event schemas for domain events published by that service
 4. Define the overall versioning strategy (URI versioning, header versioning, etc.)
+5. If `codebase_context` is non-null, review the API styles documented in the codebase overview. Align new contracts with existing patterns where appropriate. Where a new contract intentionally diverges from an existing style, note it with: ⚠️ **Style divergence:** [reason].
 
 ## Output
 
