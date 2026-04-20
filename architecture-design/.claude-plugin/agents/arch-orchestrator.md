@@ -254,11 +254,48 @@ Agents to spawn in parallel:
 
 Collect: `api_event_output`, `data_output`, `deployment_output`, `security_output`, `ops_output`.
 
+**After completing Phase 6:**
+
+1. Read `doc_path` (Read tool).
+2. Append to the document:
+   ```
+   ## Design Sections
+
+   ### API and Event Design
+   <api_event_output>
+
+   ### Data Design
+   <data_output>
+
+   ### Deployment Design
+   <deployment_output>
+
+   ### Security Design
+   <security_output>
+
+   ### Operations Design
+   <ops_output>
+   ```
+3. Replace the current `phase_completed` value with the next integer in the frontmatter.
+4. Write the updated content back to `doc_path` (Write tool).
+
 ---
 
 ## Phase 7 — Synthesis
 
 Invoke `arch-synthesizer` with all collected outputs. Receive `solution_intent_draft`.
+
+**After completing Phase 7:**
+
+1. Read `doc_path` (Read tool).
+2. Append to the document:
+   ```
+   ## Solution Intent Draft
+
+   <solution_intent_draft>
+   ```
+3. Replace the current `phase_completed` value with the next integer in the frontmatter.
+4. Write the updated content back to `doc_path` (Write tool).
 
 ---
 
@@ -283,6 +320,18 @@ Incorporate user responses, update `solution_intent_draft`, and run a second rev
 
 Append all remaining findings (🟡 Important, 🟢 Minor) to Section 12 of the document.
 
+**After completing Phase 8:**
+
+1. Read `doc_path` (Read tool).
+2. Append to the document:
+   ```
+   ## Review Findings
+
+   <all review_findings — 🔴 Critical items with their resolutions, 🟡 Important, and 🟢 Minor>
+   ```
+3. Replace the current `phase_completed` value with the next integer in the frontmatter.
+4. Write the updated content back to `doc_path` (Write tool).
+
 ---
 
 ## Phase 9 — Template Formatting (optional)
@@ -293,6 +342,17 @@ Determine template to use (in priority order):
 3. No template — skip Phase 9
 
 If a template was found, invoke the `arch-template-formatter` skill with the document and template. Use the formatted output as the final document.
+
+**After completing Phase 9:**
+
+- If a template was applied: write the formatted document to `doc_path`, prepending the following frontmatter block before the formatted content:
+  ```
+  ---
+  status: in-progress
+  phase_completed: 9
+  ---
+  ```
+- If no template was found (Phase 9 skipped): read `doc_path`, replace the current `phase_completed` value with the next integer in the frontmatter, write back.
 
 ---
 
