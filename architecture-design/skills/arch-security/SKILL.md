@@ -1,5 +1,5 @@
 ---
-name: security-skill
+name: arch-security
 description: Use this skill for security architecture design. Trigger on security design, data protection, encryption, PCI, Kafka security, API security, data at rest, data in transit, database protection, or any solution requiring security architecture. Covers transit encryption, data at rest, Kafka and database security, PCI patterns, and API Gateway connectivity. Always included in Solution Intent.
 ---
 

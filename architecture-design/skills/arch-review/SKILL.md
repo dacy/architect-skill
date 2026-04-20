@@ -1,5 +1,5 @@
 ---
-name: architecture-reviewer-skill
+name: arch-review
 description: Use this skill to review an architecture document and return structured findings. Auto-triggered by the architect skill after every Quick Read and Solution Intent as an internal quality pass. Also trigger standalone on "review this doc", "critique this architecture", "check this before I share it", or "assess this solution intent". Reviews completeness, risk quality, assumption exposure, and standards compliance.
 ---
 

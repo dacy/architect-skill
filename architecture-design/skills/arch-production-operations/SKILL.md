@@ -1,5 +1,5 @@
 ---
-name: production-operations-skill
+name: arch-production-operations
 description: Use this skill for production readiness design. Trigger on observability, monitoring, alerting, resiliency, performance design, cost optimization, SLO, SLA, or any solution being prepared for production. Covers the full production readiness picture — observability, resiliency, performance, and cost optimization. Always included in Solution Intent.
 ---
 

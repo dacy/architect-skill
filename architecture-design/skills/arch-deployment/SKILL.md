@@ -1,5 +1,5 @@
 ---
-name: deployment-patterns-skill
+name: arch-deployment
 description: Use this skill for deployment architecture and network design. Trigger on deployment pattern, how to deploy, network design, infrastructure design, environment strategy, CI/CD, VPC, subnets, or any solution requiring infrastructure planning. Applies company deployment tooling standards and network conventions. Always included in Solution Intent.
 ---
 

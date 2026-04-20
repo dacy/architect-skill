@@ -1,5 +1,5 @@
 ---
-name: api-patterns-skill
+name: arch-api-event
 description: Use this skill for API design and external access patterns. Trigger on API design, REST endpoints, API versioning, authentication patterns, rate limiting, contract design, inter-service API boundaries, external REST access, or API gateway patterns. Also auto-triggered by the architect orchestrator for any solution with API surface area. Enforces enterprise API standards; flags deviations.
 ---
 

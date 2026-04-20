@@ -1,5 +1,5 @@
 ---
-name: data-architecture-skill
+name: arch-data
 description: Use this skill for data architecture design. Trigger on data flow, caching, Redis, data pipeline, ETL, data consumption, analytics integration, data publishing, data movement, data migration, or any solution with significant data architecture. Covers flow, caching, analytical platform consumption, and publishing patterns aligned to company standards.
 ---
 

@@ -1,5 +1,6 @@
 {
   "name": "architect-ai",
+  "version": "0.1.0",
   "description": "Enterprise architecture design assistant with guided 10-phase workflow producing a Solution Intent document",
   "author": {
     "name": "chun",

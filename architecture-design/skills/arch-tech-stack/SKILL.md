@@ -1,5 +1,5 @@
 ---
-name: tech-stack-skill
+name: arch-tech-stack
 description: Use this skill for technology selection decisions. Trigger on tech stack, technology selection, what language, what framework, approved technologies, tech exception, or any time a technology choice is being made. The company has an opinionated tech stack — always consult this skill before recommending a technology to ensure alignment with approved choices.
 ---
 

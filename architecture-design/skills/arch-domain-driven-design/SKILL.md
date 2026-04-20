@@ -1,5 +1,5 @@
 ---
-name: ddd-skill
+name: arch-domain-driven-design
 description: Use this skill to apply Domain Driven Design to solution architecture. Trigger on bounded context, domain model, ubiquitous language, domain events, aggregate, DDD, context map, or when decomposing a business domain into services. Use this skill early in solution design — DDD decisions drive microservice boundaries, API contracts, and event schemas.
 ---
 

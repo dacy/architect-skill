@@ -1,11 +1,12 @@
 ---
 description: Design a system architecture through a guided 10-phase workflow, producing a Solution Intent document. Supports resuming in-progress sessions.
-argument-hint: "[initiative description] [--template <path>] [--resume <path>]"
+argument-hint: [initiative description] [--template <path>] [--resume <path>]
+allowed-tools: Task
 ---
 
-# create-architect Command
+# create-architecture Command
 
-You are the entry point for the `/create-architect` command. Your only job is to parse the user's arguments and hand off to the `arch-orchestrator` agent.
+You are the entry point for the `/create-architecture` command. Your only job is to parse the user's arguments and hand off to the `arch-orchestrator` agent.
 
 ## Parsing Arguments
 
