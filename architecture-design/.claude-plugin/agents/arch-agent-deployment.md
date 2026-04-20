@@ -11,7 +11,7 @@ color: cyan
 You design the deployment and infrastructure architecture.
 
 ## Input
-Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `chosen_approach`.
+Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`.
 
 ## Process
 
@@ -24,6 +24,7 @@ Full context object including `ddd_output`, `goals`, `constraints`, `clarificati
    - Environment strategy (dev, staging, prod; environment parity)
    - Network design: VPC, subnets, security group boundaries, ingress
    - Deployment pattern per service: blue/green, canary, or rolling
+7. If `codebase_context` is non-null, review existing infrastructure patterns documented in the codebase overview. Build on them where possible. Where a new infrastructure choice deviates from existing patterns, note it with: ⚠️ **Infrastructure deviation:** [reason].
 
 ## Output
 
