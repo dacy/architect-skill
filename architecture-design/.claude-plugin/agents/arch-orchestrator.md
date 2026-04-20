@@ -15,6 +15,50 @@ Start by creating a TodoWrite task list with all 10 phases. Mark each complete a
 ## Inputs
 - `initiative_input`: raw text, structured brief, URL, or empty string
 - `template_path`: path to output template or null
+- `resume_path`: path to an in-progress `*-solution-intent.md` file, or null
+
+---
+
+## Entry Point
+
+**Before starting Phase 1**, check for a resume scenario:
+
+1. If `resume_path` is not null, proceed to **Resume Flow** below.
+2. If `resume_path` is null, scan `docs/` for any file matching `*-solution-intent.md` (Read tool):
+   - Read each file's frontmatter.
+   - Collect files where `status: in-progress`.
+   - If exactly one found: ask the user:
+     > "I found an in-progress session: `<filename>`. Resume it, or start a new one?"
+     > If they choose resume: set `resume_path` to that path and proceed to Resume Flow.
+   - If multiple found: list them and ask which to resume (or start fresh). If the user picks one, set `resume_path` and proceed to Resume Flow.
+   - If none found: proceed to Phase 1 normally.
+
+---
+
+## Resume Flow
+
+When `resume_path` is set:
+
+1. Read the document at `resume_path` in full (Read tool).
+2. Extract `phase_completed` from frontmatter (integer).
+3. Reconstruct all context variables from the document sections that exist:
+   - `## Initiative Brief` → `initiative_name`, `goals`, `constraints`, `referenced_systems`
+   - `## Context` → `exploration_context`; if a `### Codebase Context` subsection exists, also extract `codebase_context`
+   - `## Clarifications` → `clarification_context`
+   - `## Domain Design` → `ddd_output`
+   - `## Chosen Approach` → `chosen_approach`, `approach_rationale`, `tech_flags`
+   - `## Design Sections` → `api_event_output`, `data_output`, `deployment_output`, `security_output`, `ops_output`
+   - `## Solution Intent Draft` → `solution_intent_draft`
+   - `## Review Findings` → `review_findings`
+4. Set `doc_path = resume_path`.
+5. Create a TodoWrite task list for the remaining phases only (Phase `phase_completed + 1` through Phase 10).
+6. Present the resume summary:
+   > **Resuming:** <initiative_name>
+   > **Completed:** Phases 1–<phase_completed>
+   > **Last output:** <3–5 lines from the last-written section in the document>
+   >
+   > Ready to continue from Phase <phase_completed + 1>?
+7. Wait for user confirmation, then jump to Phase `phase_completed + 1`.
 
 ---
 
