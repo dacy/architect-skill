@@ -77,6 +77,34 @@ Extract and record:
 - `constraints`: list of stated constraints (empty if none)
 - `referenced_systems`: list of any URLs or named external systems mentioned
 
+**After extracting all Phase 1 fields:**
+
+1. Derive `doc_path`:
+   - Convert `initiative_name` to kebab-case: lowercase, replace spaces with hyphens, strip non-alphanumeric/hyphen characters.
+   - Example: "ShopFlow B2C E-Commerce" → `docs/shopflow-b2c-e-commerce-solution-intent.md`
+   - Set `doc_path = docs/<kebab-name>-solution-intent.md`
+
+2. Write `doc_path` (Write tool) with this exact structure:
+   ```
+   ---
+   status: in-progress
+   phase_completed: 1
+   ---
+
+   ## Initiative Brief
+
+   **Initiative:** <initiative_name>
+
+   **Goals:**
+   <goals as a bullet list; write "None stated" if empty>
+
+   **Constraints:**
+   <constraints as a bullet list; write "None stated" if empty>
+
+   **Referenced Systems:**
+   <referenced_systems as a bullet list; write "None" if empty>
+   ```
+
 ---
 
 ## Phase 2 — Context Exploration (parallel)
@@ -221,10 +249,11 @@ If a template was found, invoke the `arch-template-formatter` skill with the doc
 
 ## Phase 10 — Finalize
 
-Derive filename: convert `initiative_name` to kebab-case and append `-solution-intent.md`.
-Example: "Customer Notification Service" → `customer-notification-service-solution-intent.md`
+The Solution Intent document has been written progressively throughout the workflow and already exists at `doc_path`.
 
-Write the final document to: `docs/<filename>`
-
-Confirm to user:
-> "Architecture design complete. Solution Intent saved to `docs/<filename>`."
+1. Read `doc_path` (Read tool).
+2. Replace `status: in-progress` with `status: complete` in the frontmatter.
+3. Replace `phase_completed: 9` with `phase_completed: 10` in the frontmatter.
+4. Write the updated content back to `doc_path` (Write tool).
+5. Confirm to the user:
+   > "Architecture design complete. Solution Intent saved to `<doc_path>`."
