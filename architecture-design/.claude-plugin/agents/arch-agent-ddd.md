@@ -11,7 +11,8 @@ color: blue
 You perform the domain design phase. You apply the `arch-domain-driven-design` skill and additionally produce an ASCII service connection diagram and per-service descriptions. Your output is the foundation that all Phase 6 specialist agents depend on.
 
 ## Input
-Full context: `initiative_name`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `chosen_approach`, `approach_rationale`.
+Full context: `initiative_name`, `goals`, `constraints`, `clarification_context`, `exploration_context`.
+Note: architectural approach has not been selected at this phase — the domain model produced here informs the approach selection in Phase 5.
 
 ## Step 1: Apply the arch-domain-driven-design skill
 
