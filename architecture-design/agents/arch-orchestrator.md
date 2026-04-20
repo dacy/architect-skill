@@ -124,16 +124,16 @@ Collect all returned context blocks into `exploration_context`. For any explorer
 
 If `referenced_systems` is empty, set `exploration_context` to `[]` and `unresolved_systems` to `[]` and proceed.
 
-**After completing Phase 2 (and Phase 2b if it ran):**
+**After completing Phase 2:**
 
 1. Read `doc_path` (Read tool).
 2. Append to the document:
    ```
    ## Context
 
-   <exploration_context blocks, one subsection per explored system>
-   <if Phase 2b ran: append a ### Codebase Context subsection with codebase_context>
+   <exploration_context blocks, one ### subsection per explored system>
    ```
+   If `referenced_systems` was empty, write `_No external systems to explore._` as the body.
 3. Replace `phase_completed: 1` with `phase_completed: 2` in the frontmatter.
 4. Write the updated content back to `doc_path` (Write tool).
 
@@ -159,14 +159,20 @@ Ask the user:
 
 5. Assemble `codebase_context` by combining the overview snapshot and all deep-dive findings:
    ```
-   ## Codebase Context: [codebase_path]
+   ### Codebase Context: [codebase_path]
 
-   ### Overview
+   **Overview**
    [overview snapshot from step 1]
 
-   ### Deep-Dive Findings
+   **Deep-Dive Findings**
    [all finding blocks from step 4, one per confirmed focus area]
    ```
+
+**After completing Phase 2b (only if `codebase_context` is non-null):**
+
+1. Read `doc_path` (Read tool).
+2. Append the assembled `codebase_context` block above as a new subsection inside the existing `## Context` section (place it after the last system subsection; use the Edit tool to insert it just before the next top-level `## ` heading, or append it to the end of the file if `## Context` is currently the last section).
+3. `phase_completed` stays at 2 — Phase 2b is a sub-phase of Phase 2 for resume purposes.
 
 Proceed to Phase 3.
 
@@ -185,7 +191,13 @@ Ask questions one at a time. Scale quantity to complexity:
 - Moderate complexity: 3–4 questions
 - Ambiguous or large scope: 5–8 questions
 
-Target areas (only ask what's not already known):
+**Tailor questions to this initiative.** Before falling back to the generic target areas below, derive the two or three dominant uncertainty axes from `goals` and `constraints`. Examples:
+- A scale-first initiative → scale/throughput/latency targets precede build-vs-buy
+- A compliance-driven initiative → data residency, retention, audit trail precede team structure
+- A legacy-replacement initiative → migration cutover, dual-running tolerance, data backfill strategy dominate
+- An AI/ML-feature initiative → model hosting, inference latency budget, training data lineage dominate
+
+Target areas (fall back to these when the dominant axes are covered; only ask what's not already known):
 - Expected scale: users, request volume, data volume
 - Existing systems to integrate with beyond what was already captured
 - Team constraints: size, technology familiarity, existing commitments
@@ -232,22 +244,21 @@ Here is the proposed domain model and service decomposition:
 **Domain Events:**
 [domain_events]
 
-Does this decomposition look right? Approve to proceed, or let me know what to adjust.
+Does this decomposition look right? Reply **"approve"** to proceed, or describe what to change.
 ```
 
-Wait for explicit approval. If changes requested, re-invoke `arch-agent-ddd` with the feedback appended to context. Repeat until approved.
+Wait for explicit approval. Treat as approval: any of "approve", "approved", "lgtm", "yes", "proceed", "looks good". Anything else is treated as change request — re-invoke `arch-agent-ddd` with the feedback appended to context and present again. Repeat until approved.
 
 Store approved output as `ddd_output`.
 
 **After completing this phase (Domain Design):**
 
 1. Read `doc_path` (Read tool).
-2. Append to the document:
-   ```
-   ## Domain Design
-
-   <ddd_output — bounded contexts, service descriptions, ASCII diagram, and domain events>
-   ```
+2. Append a `## Domain Design` section with four subsections, in this order:
+   - `### Bounded Contexts` — the `bounded_contexts` list
+   - `### Service Descriptions` — the `service_descriptions` content
+   - `### Service Decomposition Diagram` — the `ascii_diagram` wrapped in a fenced code block
+   - `### Domain Events` — the `domain_events` list
 3. Replace the current `phase_completed` value with the next integer in the frontmatter.
 4. Write the updated content back to `doc_path` (Write tool).
 
@@ -260,19 +271,17 @@ Invoke `arch-strategist` with:
 - `clarification_context`, `exploration_context`, `codebase_context`
 - `ddd_output` (bounded_contexts, service_descriptions, domain_events)
 
-The strategist uses the approved domain model to evaluate each architectural pattern's fit for the service decomposition. It presents 2–3 approaches and asks the user to choose. Wait for the user's selection.
+The strategist uses the approved domain model to evaluate each architectural pattern's fit for the service decomposition. It presents 2–3 approaches and asks the user to choose. Wait for the user's selection (user may reply with the approach name, a letter like "A", or a number like "1" — interpret against the presented list).
 
 Record: `chosen_approach`, `approach_rationale`, `tech_flags`.
 
 **After completing this phase (Chosen Approach):**
 
 1. Read `doc_path` (Read tool).
-2. Append to the document:
-   ```
-   ## Chosen Approach
-
-   <chosen_approach, approach_rationale, and tech_flags from the approved strategist output>
-   ```
+2. Append a `## Chosen Approach` section with three bolded labels:
+   - `**Approach:**` — the one-line name/summary of `chosen_approach`
+   - `**Rationale:**` — the `approach_rationale` prose
+   - `**Tech flags:**` — the `tech_flags` list (any Exception- or Conditional-tier technologies from the chosen approach, each with a one-line note); write "None" if the list is empty
 3. Replace the current `phase_completed` value with the next integer in the frontmatter.
 4. Write the updated content back to `doc_path` (Write tool).
 

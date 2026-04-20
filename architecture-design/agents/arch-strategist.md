@@ -74,8 +74,8 @@ Then ask: "Which approach would you like to pursue? (Or let me know if you'd lik
 Wait for the user's text response. Parse it to extract:
 - `chosen_approach`: the option letter or name they selected (e.g., "Option A" or "Event-driven microservices")
 - `approach_rationale`: their stated reason, or the recommendation rationale if they accepted the recommendation
-- `tech_flags`: list of any Exception-tier technologies identified in Step 2 for the chosen option (empty list if none)
+- `tech_flags`: list of any Exception-tier **or Conditionally Approved** technologies identified in Step 2 for the chosen option. Format each entry as `[technology] — [tier] — [one-line justification or remaining condition]`. Empty list if the chosen option contains only Approved-tier choices.
 
 ## Output
 
-Once the user responds, return: `chosen_approach` (option name), `approach_rationale` (user's reason or the recommendation rationale), `tech_flags` (any exception-tier technologies from the chosen option).
+Once the user responds, return: `chosen_approach` (option name), `approach_rationale` (user's reason or the recommendation rationale), `tech_flags` (Exception- and Conditional-tier technologies from the chosen option, or empty list).
