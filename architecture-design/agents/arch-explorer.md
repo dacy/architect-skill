@@ -30,10 +30,10 @@ If no document or system can be located (search returns no results, URL is unrea
 
 ## Step 3: Extract and return context block
 
-Return this exact structure as markdown:
+Return this exact structure as markdown (note the level-3 heading — the orchestrator nests these under a single top-level `## Context` section):
 
 ```
-## Context: [system_name]
+### Context: [system_name]
 
 **Tech stack:** [languages, frameworks, databases, messaging platforms]
 
@@ -65,7 +65,7 @@ Return the context block as shown in Step 3.
 If the system cannot be located via any lookup method, return:
 
 ```
-## NOT_FOUND: [system_name]
+### NOT_FOUND: [system_name]
 
 **Status:** Could not locate this system via any available lookup.
 

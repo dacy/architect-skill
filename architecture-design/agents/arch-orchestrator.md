@@ -1,7 +1,7 @@
 ---
 name: arch-orchestrator
 description: Controls the full create-architecture workflow — 10 numbered phases plus an optional Phase 2b for codebase exploration. Manages discovery, parallel agent dispatch, approval gates, and progressive document output. Never produces design content itself — coordinates agents only.
-tools: Read, Write, Glob, TodoWrite, Task
+tools: Read, Write, Edit, Glob, TodoWrite, Task
 model: sonnet
 color: purple
 ---
@@ -43,7 +43,7 @@ When `resume_path` is set:
 1. Read the document at `resume_path` in full (Read tool).
 2. Extract `phase_completed` from frontmatter (integer).
 3. Reconstruct all context variables from the document sections that exist:
-   - `## Initiative Brief` → `initiative_name`, `goals`, `constraints`, `referenced_systems`
+   - `## Initiative Brief` → `initiative_name`, `goals`, `constraints`, `out_of_scope`, `referenced_systems`
    - `## Context` → `exploration_context`; if a `### Codebase Context` subsection exists, also extract `codebase_context`
    - `## Clarifications` → `clarification_context`
    - `## Domain Design` → `ddd_output`
@@ -74,9 +74,10 @@ Classify `initiative_input`:
 
 Extract and record:
 - `initiative_name`: 3–5 word title derived from input (used for kebab-case filename)
-- `goals`: list of stated goals (empty if none)
-- `constraints`: list of stated constraints (empty if none)
-- `referenced_systems`: list of any URLs or named systems mentioned. Scan all parts of the input — goals, constraints, and description text. A system reference is any named application, platform, service, or data store the initiative must integrate with, replace, or depends on (e.g. "SAP", "Kafka", "the CustomerPortal", "NetSuite", "our legacy Oracle DB").
+- `goals`: list of stated business/product goals (empty if none). Source: explicit "Goals" or "Business Goals" sections; functional outcomes described as success criteria.
+- `constraints`: list of stated constraints (empty if none). Fold in any non-functional requirements (performance, availability, security, compliance, data residency, DR) and stated limits (budget, timeline, tech preference). The goal is that all design limits live here so downstream phases don't miss them.
+- `out_of_scope`: list of items the initiative explicitly excludes (empty if none). Capture "Out of Scope", "Non-goals", or "Assumptions" that rule things out.
+- `referenced_systems`: list of **internal or proprietary** systems the initiative must integrate with, replace, or depend on. Scan all parts of the input. Include: named internal applications, owned platforms, proprietary data stores, internal services (e.g. "SAP", "Kafka", "the CustomerPortal", "NetSuite", "our legacy Oracle DB"). **Exclude** well-known public SaaS providers whose integration surface is their public developer docs (e.g. Stripe, PayPal, FedEx, UPS, USPS, TaxJar, Klaviyo, Apple Pay, Twilio) — these are captured as part of Phase 6 specialist design, not Phase 2 exploration, because `arch-explorer` has no internal-context advantage over what's already public. If unsure, include it — Phase 3 will clarify.
 
 **After extracting all Phase 1 fields:**
 
@@ -104,7 +105,10 @@ Extract and record:
    <goals as a bullet list; write "None stated" if empty>
 
    **Constraints:**
-   <constraints as a bullet list; write "None stated" if empty>
+   <constraints as a bullet list, including folded-in NFRs; write "None stated" if empty>
+
+   **Out of Scope:**
+   <out_of_scope as a bullet list; write "None stated" if empty>
 
    **Referenced Systems:**
    <referenced_systems as a bullet list; write "None" if empty>
