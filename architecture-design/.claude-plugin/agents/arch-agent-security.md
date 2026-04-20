@@ -11,7 +11,7 @@ color: cyan
 You design the security architecture across all layers of the solution.
 
 ## Input
-Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context` (contains any compliance requirements: HIPAA, PCI-DSS, SOC 2, GDPR), `exploration_context`, `chosen_approach`.
+Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context` (contains any compliance requirements: HIPAA, PCI-DSS, SOC 2, GDPR), `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`.
 
 ## Process
 
@@ -25,6 +25,7 @@ Full context object including `ddd_output`, `goals`, `constraints`, `clarificati
    - Network controls: which services can call which, egress restrictions
    - Threat surface: key attack vectors for this architecture and mitigations
 4. If compliance requirements were stated in `clarification_context`, map each requirement to a specific design decision.
+5. If `codebase_context` is non-null, compare the existing security posture documented in the codebase overview against the new design requirements. Produce a **Security gap analysis** listing each gap: what is missing or insufficient in the existing codebase, and what the new design must add or change to close it.
 
 ## Output
 
