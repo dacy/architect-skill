@@ -11,7 +11,7 @@ color: cyan
 You design the production readiness and operational architecture.
 
 ## Input
-Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`.
+Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`, `approach_rationale`, `tech_flags`.
 
 ## Process
 

@@ -11,7 +11,7 @@ color: cyan
 You design the security architecture across all layers of the solution.
 
 ## Input
-Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context` (contains any compliance requirements: HIPAA, PCI-DSS, SOC 2, GDPR), `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`.
+Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context` (contains any compliance requirements: HIPAA, PCI-DSS, SOC 2, GDPR), `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`, `approach_rationale`, `tech_flags`.
 
 ## Process
 

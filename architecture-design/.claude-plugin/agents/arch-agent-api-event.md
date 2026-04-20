@@ -11,7 +11,7 @@ color: cyan
 You design the API and event architecture for all services in the decomposition.
 
 ## Input
-Full context object including `ddd_output` (bounded_contexts, service_descriptions, ascii_diagram, domain_events), `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`.
+Full context object including `ddd_output` (bounded_contexts, service_descriptions, ascii_diagram, domain_events), `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`, `approach_rationale`, `tech_flags`.
 
 ## Process
 
