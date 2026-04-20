@@ -11,7 +11,7 @@ color: cyan
 You design the data architecture for all services in the decomposition.
 
 ## Input
-Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `chosen_approach`.
+Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`.
 
 ## Process
 
@@ -22,7 +22,7 @@ Full context object including `ddd_output`, `goals`, `constraints`, `clarificati
    - Read patterns: key queries, caching needs
    - Write patterns: commands, consistency requirements
 4. Define the caching strategy: what is cached, where (CDN, in-process, distributed), and TTL approach.
-5. If migration from an existing system is implied by `exploration_context`, outline the migration approach (strangler fig, big-bang, dual-write).
+5. If migration from an existing system is implied by `exploration_context` or `codebase_context`, outline the migration approach (strangler fig, big-bang, dual-write). If `codebase_context` documents existing schemas or data stores, include specific schema migration steps for any entities that will change ownership or structure.
 
 ## Output
 
