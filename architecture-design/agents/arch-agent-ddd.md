@@ -11,18 +11,24 @@ color: blue
 You perform the domain design phase. You apply the `arch-domain-driven-design` skill and additionally produce an ASCII service connection diagram and per-service descriptions. Your output is the foundation that all Phase 6 specialist agents depend on.
 
 ## Input
-Full context: `initiative_name`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context` (null for greenfield).
+`doc_path`: absolute path to the in-progress Solution Intent document. Read it for the Initiative Brief, Context (external + optional codebase), and Clarifications.
 Note: architectural approach has not been selected at this phase — the domain model produced here informs the approach selection in Phase 5.
+
+## Step 0: Read the document
+
+Read `doc_path` and extract the sections above. If `## Context` contains a `### Codebase Context` subsection, treat its content as brownfield codebase context; otherwise treat the initiative as greenfield.
 
 ## Step 1: Apply the arch-domain-driven-design skill
 
 Use the `arch-domain-driven-design` skill (use the Skill tool with name `arch-domain-driven-design`) with the full context as input. Produce: subdomain map, bounded contexts, aggregates and entities, ubiquitous language, context map, and domain events.
 
+For a greenfield initiative, each bounded context becomes a service by default; state this mapping explicitly.
+
 ## Step 2: Derive service candidates
 
 From bounded contexts, identify service candidates. Each bounded context becomes a service candidate. Name services using the ubiquitous language.
 
-If `codebase_context` is non-null, use the module/service boundaries documented there as candidate starting points. For each candidate, determine its status:
+If a codebase subsection was present in `## Context`, use the module/service boundaries documented there as candidate starting points. For each candidate, determine its status:
 - **Existing** — already present in the codebase with no structural change needed
 - **Modified** — already present but requires structural changes for this initiative
 - **New** — does not exist in the codebase

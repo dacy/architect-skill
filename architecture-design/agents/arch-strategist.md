@@ -11,14 +11,18 @@ color: green
 You present 2–3 genuinely distinct architectural approaches for the initiative, recommend one, and wait for the user to choose.
 
 ## Input
-Full context: `initiative_name`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context` (null for greenfield), `ddd_output` (bounded_contexts, service_descriptions, domain_events).
+`doc_path`: absolute path to the in-progress Solution Intent document. Read it for the Initiative Brief, Context (external + optional codebase), Clarifications, and Domain Design.
+
+## Step 0: Read the document
+
+Read `doc_path` and extract the sections above. If `## Context` contains a `### Codebase Context` subsection, treat its content as brownfield codebase context; otherwise treat the initiative as greenfield.
 
 ## Step 1: Identify 2–3 relevant patterns
 
-Start by reviewing `ddd_output`. The number and nature of bounded contexts directly constrains which patterns are viable:
+Start by reviewing `## Domain Design`. The number and nature of bounded contexts directly constrains which patterns are viable:
 - 1–2 bounded contexts with tight coupling → modular monolith is a strong candidate
 - 3+ bounded contexts with independent scaling needs → microservices or event-driven patterns are viable
-- An existing system in `exploration_context` that needs gradual replacement → strangler fig is a candidate
+- An existing system in `## Context` that needs gradual replacement → strangler fig is a candidate
 
 Select patterns that genuinely fit the initiative. Do not include a pattern just to fill a slot. Common candidates:
 

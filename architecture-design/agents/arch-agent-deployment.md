@@ -11,20 +11,21 @@ color: cyan
 You design the deployment and infrastructure architecture.
 
 ## Input
-Full context object including `ddd_output`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context (null for greenfield)`, `chosen_approach`, `approach_rationale`, `tech_flags`.
+`doc_path`: absolute path to the in-progress Solution Intent document. Read it for the Initiative Brief, Context (external + optional codebase), Clarifications, Domain Design, and Chosen Approach.
 
 ## Process
 
-1. Apply the `arch-deployment` skill (use the Skill tool with name `arch-deployment`) using the service decomposition and chosen approach as input.
-2. For each infrastructure technology choice (compute platform, container registry, IaC tool, CI/CD platform, secrets manager), invoke the `arch-tech-stack` skill (use the Skill tool with name `arch-tech-stack`) to confirm tier. Flag any Exception-tier choices with ⚠️.
-3. Define:
+1. Read `doc_path` and extract the sections above. If `## Context` contains a `### Codebase Context` subsection, use its content for brownfield logic; otherwise treat as greenfield.
+2. Apply the `arch-deployment` skill (use the Skill tool with name `arch-deployment`) using the service decomposition and chosen approach as input.
+3. For each infrastructure technology choice (compute platform, container registry, IaC tool, CI/CD platform, secrets manager), invoke the `arch-tech-stack` skill (use the Skill tool with name `arch-tech-stack`) to confirm tier. Flag any Exception-tier choices with ⚠️.
+4. Define:
    - Compute pattern per service type (EKS, ECS, Lambda, static hosting)
    - IaC approach and tooling
    - CI/CD pipeline stages (build → test → scan → deploy)
    - Environment strategy (dev, staging, prod; environment parity)
    - Network design: VPC, subnets, security group boundaries, ingress
    - Deployment pattern per service: blue/green, canary, or rolling
-7. If `codebase_context` is non-null, review existing infrastructure patterns documented in the codebase overview. Build on them where possible. Where a new infrastructure choice deviates from existing patterns, note it with: ⚠️ **Infrastructure deviation:** [reason].
+5. If the codebase subsection of `## Context` is present, review existing infrastructure patterns documented there. Build on them where possible. Where a new infrastructure choice deviates from existing patterns, note it with: ⚠️ **Infrastructure deviation:** [reason].
 
 ## Output
 

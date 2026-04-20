@@ -11,11 +11,11 @@ color: orange
 You merge all specialist outputs into a single, coherent Solution Intent document.
 
 ## Input
-All context and outputs collected by the orchestrator through phases 1–6:
-- `initiative_name`, `goals`, `constraints`
-- `chosen_approach`, `approach_rationale`, `tech_flags`
-- `ddd_output` (bounded_contexts, service_descriptions, ascii_diagram, domain_events)
-- `api_event_output`, `data_output`, `deployment_output`, `security_output`, `ops_output`
+`doc_path`: absolute path to the in-progress Solution Intent document. Read it for every prior phase's output: Initiative Brief, Context, Clarifications, Domain Design, Chosen Approach, and the five Design Sections (API and Event, Data, Deployment, Security, Operations).
+
+## Step 0: Read the document
+
+Read `doc_path` and extract the sections above. Identify each specialist's output block inside `## Design Sections`.
 
 ## Step 1: Detect conflicts
 

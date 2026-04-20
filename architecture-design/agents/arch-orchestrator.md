@@ -226,9 +226,7 @@ Record all answers in `clarification_context`.
 
 ## Phase 4 — Domain Design (approval gate)
 
-Invoke `arch-agent-ddd` with:
-- `initiative_name`, `goals`, `constraints`
-- `clarification_context`, `exploration_context`, `codebase_context`
+Invoke `arch-agent-ddd` with `{ doc_path }`. The DDD agent reads the doc for the Initiative Brief, Context, and Clarifications.
 
 Receive back: `bounded_contexts`, `service_descriptions`, `ascii_diagram`, `domain_events`.
 
@@ -266,10 +264,7 @@ Store approved output as `ddd_output`.
 
 ## Phase 5 — High-Level Approaches (approval gate)
 
-Invoke `arch-strategist` with:
-- `initiative_name`, `goals`, `constraints`
-- `clarification_context`, `exploration_context`, `codebase_context`
-- `ddd_output` (bounded_contexts, service_descriptions, domain_events)
+Invoke `arch-strategist` with `{ doc_path }`. The strategist reads the doc for the Initiative Brief, Context, Clarifications, and Domain Design.
 
 The strategist uses the approved domain model to evaluate each architectural pattern's fit for the service decomposition. It presents 2–3 approaches and asks the user to choose. Wait for the user's selection (user may reply with the approach name, a letter like "A", or a number like "1" — interpret against the presented list).
 
@@ -291,15 +286,11 @@ Record: `chosen_approach`, `approach_rationale`, `tech_flags`.
 
 Default: run all five specialist agents. Omit any the user explicitly excluded during Phase 3.
 
-Spawn these agents simultaneously, each receiving the full context object:
+Spawn these agents simultaneously. Each receives only `doc_path` (plus any specialist-specific scalars below). Specialists `Read` the doc themselves to obtain the Initiative Brief, Context, Clarifications, Domain Design, and Chosen Approach — this keeps the orchestrator's own context window bounded as the doc grows.
+
+Invocation input (common to all specialists):
 ```
-{
-  initiative_name, goals, constraints,
-  clarification_context, exploration_context,
-  codebase_context,
-  chosen_approach, approach_rationale, tech_flags,
-  ddd_output
-}
+{ doc_path }
 ```
 
 Agents to spawn in parallel:
@@ -340,13 +331,7 @@ Collect: `api_event_output`, `data_output`, `deployment_output`, `security_outpu
 
 ## Phase 7 — Synthesis
 
-Invoke `arch-synthesizer` with:
-- `initiative_name`, `goals`, `constraints`
-- `chosen_approach`, `approach_rationale`, `tech_flags`
-- `ddd_output`
-- `api_event_output`, `data_output`, `deployment_output`, `security_output`, `ops_output`
-
-Receive `solution_intent_draft`.
+Invoke `arch-synthesizer` with `{ doc_path }`. The synthesizer `Read`s the doc for the Design Sections, Domain Design, Chosen Approach, and prior phases; performs conflict detection and tech consolidation; and returns `solution_intent_draft`.
 
 **After completing Phase 7:**
 
@@ -365,10 +350,10 @@ Receive `solution_intent_draft`.
 ## Phase 8 — Review
 
 Invoke `arch-reviewer` with:
-- `document`: `solution_intent_draft`
+- `doc_path`
 - `pass_number`: 1
 
-Receive `review_findings`.
+The reviewer `Read`s the doc (focusing on `## Solution Intent Draft`) and returns `review_findings`.
 
 If `critical_count > 0`, present all 🔴 Critical findings to the user:
 ```
@@ -376,12 +361,10 @@ The architecture reviewer found critical issues that must be resolved before fin
 
 [each critical finding with its fix instruction]
 
-Please indicate how you'd like to address each, or approve the suggested fixes.
+Reply **"approve"** to accept the suggested fixes, or describe how you'd like each addressed.
 ```
 
-Incorporate user responses, update `solution_intent_draft`, and run a second review pass. Continue until no critical findings remain.
-
-Append all remaining findings (🟡 Important, 🟢 Minor) to Section 12 of the document.
+Incorporate user responses and apply the approved fixes to `## Solution Intent Draft` in `doc_path` (use the Edit tool — do not rewrite sections that weren't touched). Run a second review pass by re-invoking `arch-reviewer` with `pass_number: 2`. Continue until no critical findings remain.
 
 **After completing Phase 8:**
 
@@ -404,18 +387,24 @@ Determine template to use (in priority order):
 2. `${CLAUDE_PLUGIN_ROOT}/skills/arch-template-formatter/references/solution-intent-template.md` if it exists (falls back to the repo-relative path `architecture-design/skills/arch-template-formatter/references/solution-intent-template.md` when the env var is unset)
 3. No template — skip Phase 9
 
-If a template was found, invoke the `arch-template-formatter` skill with the document and template. Use the formatted output as the final document.
+If a template was found, invoke the `arch-template-formatter` skill with `{ doc_path, template_path }`. The formatter reads both files and rewrites `doc_path` in place. **Preservation contract:** the formatter MUST preserve these sections verbatim as appendices after the template's numbered sections, in this order:
+1. `## Clarifications`
+2. `## Review Findings`
+
+Everything else can be restructured to fit the template.
 
 **After completing Phase 9:**
 
-- If a template was applied: write the formatted document to `doc_path`, prepending the following frontmatter block before the formatted content:
-  ```
-  ---
-  status: in-progress
-  phase_completed: 9
-  ---
-  ```
-- If no template was found (Phase 9 skipped): read `doc_path`, replace the current `phase_completed` value with the next integer in the frontmatter, write back.
+1. Read `doc_path` (Read tool).
+2. Ensure the frontmatter block is still intact at the top (formatter may have replaced it). If missing, prepend:
+   ```
+   ---
+   status: in-progress
+   phase_completed: 9
+   ---
+   ```
+3. Otherwise, replace the current `phase_completed` value with `9` in the frontmatter (Edit tool).
+4. Write the updated content back to `doc_path` if needed.
 
 ---
 

@@ -11,12 +11,12 @@ color: red
 You perform a cold peer review of the Solution Intent draft. You operate in **orchestrated mode** — you return a structured findings block for the orchestrator to act on, not a file for the user.
 
 ## Input
-- `document`: the Solution Intent draft markdown text
+- `doc_path`: absolute path to the in-progress Solution Intent document
 - `pass_number`: 1, 2, or 3 (which review pass this is)
 
 ## Process
 
-Apply the `arch-review` skill (use the Skill tool with name `arch-review`) in full **orchestrated mode**. Evaluate the Solution Intent against all four dimensions:
+Read `doc_path`. Focus on the `## Solution Intent Draft` section; `## Review Findings`, if present, shows prior-pass history you should not re-flag. Apply the `arch-review` skill (use the Skill tool with name `arch-review`) in full **orchestrated mode**. Evaluate the Solution Intent against all four dimensions:
 
 1. **Completeness** — all 12 sections present and substantive (not placeholders)
 2. **Risk Quality** — risks in Section 11 are specific (named systems, named scenarios) and each has a mitigation
