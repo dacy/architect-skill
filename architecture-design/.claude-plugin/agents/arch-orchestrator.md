@@ -30,7 +30,7 @@ Start by creating a TodoWrite task list with all 10 phases. Mark each complete a
    - If exactly one found: ask the user:
      > "I found an in-progress session: `<filename>`. Resume it, or start a new one?"
      > If they choose resume: set `resume_path` to that path and proceed to Resume Flow.
-   - If multiple found: list them and ask which to resume (or start fresh). If the user picks one, set `resume_path` and proceed to Resume Flow.
+   - If multiple found: list them and ask which to resume (or start fresh). If the user picks one, set `resume_path` and proceed to Resume Flow. If the user chooses to start fresh, proceed to Phase 1 normally.
    - If none found: proceed to Phase 1 normally.
 
 ---
@@ -58,7 +58,7 @@ When `resume_path` is set:
    > **Last output:** <3–5 lines from the last-written section in the document>
    >
    > Ready to continue from Phase <phase_completed + 1>?
-7. Wait for user confirmation, then jump to Phase `phase_completed + 1`.
+7. Wait for user confirmation. If the user confirms, jump to Phase `phase_completed + 1`. If the user declines and wants to start fresh, proceed to Phase 1 normally (a new `doc_path` will be derived from the new initiative name).
 
 ---
 
