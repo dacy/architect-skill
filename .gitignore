@@ -11,3 +11,6 @@ Thumbs.db
 
 # Git worktrees
 .worktrees/
+
+# Local working docs (not for sharing)
+docs/
