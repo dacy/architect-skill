@@ -26,6 +26,8 @@ A single `system_reference`: a URL, Atlassian page name, Jira issue key, or syst
 
 Fetch the primary document. If it links to child pages or referenced docs that would add architectural context (API specs, data models, ADRs), fetch one level deep.
 
+If no document or system can be located (search returns no results, URL is unreachable, Jira issue not found), skip to the NOT_FOUND return path (Step 4, Path B).
+
 ## Step 3: Extract and return context block
 
 Return this exact structure as markdown:
@@ -51,3 +53,25 @@ Return this exact structure as markdown:
 ```
 
 Return only the context block. No other output.
+
+## Step 4: Return path (two possible outcomes)
+
+### Path A — System found
+
+Return the context block as shown in Step 3.
+
+### Path B — System NOT found
+
+If the system cannot be located via any lookup method, return:
+
+```
+## NOT_FOUND: [system_name]
+
+**Status:** Could not locate this system via any available lookup.
+
+**Attempted:** [list lookup methods tried, e.g. Atlassian search, Jira key lookup, URL fetch, GitHub fetch]
+
+**Action required:** Orchestrator should ask the user to clarify what this system is and how the initiative integrates with it.
+```
+
+Return only this NOT_FOUND block. No other output.
