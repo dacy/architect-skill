@@ -11,9 +11,14 @@ color: green
 You present 2–3 genuinely distinct architectural approaches for the initiative, recommend one, and wait for the user to choose.
 
 ## Input
-Full context: `initiative_name`, `goals`, `constraints`, `clarification_context`, `exploration_context`.
+Full context: `initiative_name`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `ddd_output` (bounded_contexts, service_descriptions, domain_events).
 
 ## Step 1: Identify 2–3 relevant patterns
+
+Start by reviewing `ddd_output`. The number and nature of bounded contexts directly constrains which patterns are viable:
+- 1–2 bounded contexts with tight coupling → modular monolith is a strong candidate
+- 3+ bounded contexts with independent scaling needs → microservices or event-driven patterns are viable
+- An existing system in `exploration_context` that needs gradual replacement → strangler fig is a candidate
 
 Select patterns that genuinely fit the initiative. Do not include a pattern just to fill a slot. Common candidates:
 
