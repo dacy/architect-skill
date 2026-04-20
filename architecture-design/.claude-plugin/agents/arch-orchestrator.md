@@ -75,7 +75,7 @@ Extract and record:
 - `initiative_name`: 3–5 word title derived from input (used for kebab-case filename)
 - `goals`: list of stated goals (empty if none)
 - `constraints`: list of stated constraints (empty if none)
-- `referenced_systems`: list of any URLs or named external systems mentioned
+- `referenced_systems`: list of any URLs or named systems mentioned. Scan all parts of the input — goals, constraints, and description text. A system reference is any named application, platform, service, or data store the initiative must integrate with, replace, or depends on (e.g. "SAP", "Kafka", "the CustomerPortal", "NetSuite", "our legacy Oracle DB").
 
 **After extracting all Phase 1 fields:**
 
@@ -111,9 +111,9 @@ Extract and record:
 
 If `referenced_systems` is non-empty, spawn one `arch-explorer` agent per item simultaneously. Pass each item as the sole input to the agent.
 
-Collect all returned context blocks into `exploration_context`.
+Collect all returned context blocks into `exploration_context`. For any explorer that returns a `NOT_FOUND` signal, add that system name to `unresolved_systems`.
 
-If `referenced_systems` is empty, set `exploration_context` to `[]` and proceed.
+If `referenced_systems` is empty, set `exploration_context` to `[]` and `unresolved_systems` to `[]` and proceed.
 
 **After completing Phase 2 (and Phase 2b if it ran):**
 
@@ -146,6 +146,7 @@ Target areas (only ask what's not already known):
 - Build vs. buy: auth, payments, notifications, search
 - Compliance: HIPAA, PCI-DSS, SOC 2, GDPR
 - Phasing preference: MVP scope vs. full solution
+- For each system in `unresolved_systems`: Ask "You mentioned **[system name]** — can you tell me what it is, who owns it, and how this initiative needs to interact with it? (e.g. read-only query, bidirectional sync, event subscription, system being replaced)." After the user answers, record in `clarification_context`. If they provide a URL or Atlassian page name, re-spawn an `arch-explorer` with the clarified reference and merge the result into `exploration_context`.
 
 Stop when you can proceed without significant design assumptions.
 
@@ -165,42 +166,17 @@ Record all answers in `clarification_context`.
 
 ---
 
-## Phase 4 — High-Level Approaches (approval gate)
+## Phase 4 — Domain Design (approval gate)
 
-Invoke `arch-strategist` with:
+Invoke `arch-agent-ddd` with:
 - `initiative_name`, `goals`, `constraints`
 - `clarification_context`, `exploration_context`
-
-The strategist presents 2–3 approaches and asks the user to choose. Wait for the user's selection.
-
-Record: `chosen_approach`, `approach_rationale`, `tech_flags`.
-
-**After completing this phase (Chosen Approach):**
-
-1. Read `doc_path` (Read tool).
-2. Append to the document:
-   ```
-   ## Chosen Approach
-
-   <chosen_approach, approach_rationale, and tech_flags from the approved strategist output>
-   ```
-3. Replace the current `phase_completed` value with the next integer in the frontmatter.
-4. Write the updated content back to `doc_path` (Write tool).
-
----
-
-## Phase 5 — Domain Design (approval gate)
-
-Invoke `arch-agent-ddd` with the full context:
-- `initiative_name`, `goals`, `constraints`
-- `clarification_context`, `exploration_context`
-- `chosen_approach`, `approach_rationale`
 
 Receive back: `bounded_contexts`, `service_descriptions`, `ascii_diagram`, `domain_events`.
 
 Present to user:
 ```
-Here is the proposed service decomposition:
+Here is the proposed domain model and service decomposition:
 
 [ascii_diagram]
 
@@ -225,6 +201,31 @@ Store approved output as `ddd_output`.
    ## Domain Design
 
    <ddd_output — bounded contexts, service descriptions, ASCII diagram, and domain events>
+   ```
+3. Replace the current `phase_completed` value with the next integer in the frontmatter.
+4. Write the updated content back to `doc_path` (Write tool).
+
+---
+
+## Phase 5 — High-Level Approaches (approval gate)
+
+Invoke `arch-strategist` with:
+- `initiative_name`, `goals`, `constraints`
+- `clarification_context`, `exploration_context`
+- `ddd_output` (bounded_contexts, service_descriptions, domain_events)
+
+The strategist uses the approved domain model to evaluate each architectural pattern's fit for the service decomposition. It presents 2–3 approaches and asks the user to choose. Wait for the user's selection.
+
+Record: `chosen_approach`, `approach_rationale`, `tech_flags`.
+
+**After completing this phase (Chosen Approach):**
+
+1. Read `doc_path` (Read tool).
+2. Append to the document:
+   ```
+   ## Chosen Approach
+
+   <chosen_approach, approach_rationale, and tech_flags from the approved strategist output>
    ```
 3. Replace the current `phase_completed` value with the next integer in the frontmatter.
 4. Write the updated content back to `doc_path` (Write tool).
