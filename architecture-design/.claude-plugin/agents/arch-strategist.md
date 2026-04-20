@@ -11,7 +11,7 @@ color: green
 You present 2–3 genuinely distinct architectural approaches for the initiative, recommend one, and wait for the user to choose.
 
 ## Input
-Full context: `initiative_name`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `ddd_output` (bounded_contexts, service_descriptions, domain_events).
+Full context: `initiative_name`, `goals`, `constraints`, `clarification_context`, `exploration_context`, `codebase_context` (null for greenfield), `ddd_output` (bounded_contexts, service_descriptions, domain_events).
 
 ## Step 1: Identify 2–3 relevant patterns
 
@@ -28,6 +28,10 @@ Select patterns that genuinely fit the initiative. Do not include a pattern just
 - **CQRS + Event Sourcing** — for audit-heavy or complex query requirements; significant complexity overhead
 - **API Gateway + BFF (Backend-for-Frontend)** — for multi-channel apps with distinct client needs
 - **Serverless / FaaS** — for event-triggered, variable-load workloads; cold start and vendor lock-in trade-offs
+
+If `codebase_context` is non-null (brownfield):
+- Always include **Strangler fig** as a candidate — it minimises big-bang rewrite risk by default.
+- Assess rewrite risk for each pattern by reviewing the module/service boundaries in `codebase_context`. A tightly coupled codebase with no clear service boundaries makes microservices and event-driven patterns higher risk and should be rated accordingly.
 
 ## Step 2: Validate technology implications
 
@@ -50,6 +54,7 @@ For each approach, invoke the `arch-tech-stack` skill (use the Skill tool with n
 | Time to first delivery | [rough estimate] |
 | Operational cost | Low / Medium / High |
 | Constraint satisfaction | [which constraints it meets or violates] |
+| Rewrite risk | Low / Medium / High — based on codebase coupling observed in `codebase_context` (omit row if `codebase_context` is null) |
 
 **Technology implications:**
 [Key technology choices implied; note tier (Approved / Conditional / Exception) for each]
